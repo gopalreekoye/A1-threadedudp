@@ -69,7 +69,7 @@ public class Client implements Runnable
 	//
 	public String receive(final PacketHandler handler)
 	{
-      String s;
+       String s = "";
 		receive = new Thread("receive_thread"){
 			public void run()
 			{
@@ -80,7 +80,7 @@ public class Client implements Runnable
 
 					try{
 						socket.receive(dgpacket);
-                  s= new String(dgpacket.getData());
+                  	s = new String(dgpacket.getData());
                   
 					}catch(IOException e)
 					{
@@ -92,11 +92,12 @@ public class Client implements Runnable
 
 				}
 			}  
-          return s;
+          
 
 		};
 
 		receive.start();
+		return s;
 	}
 
 	//close current connection

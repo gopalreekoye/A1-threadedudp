@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 
-package mypackage;
+package GUI;
 import javax.swing.JOptionPane;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.lang.String;
-import mypackage.ChatRoomInterface;
+import GUI.ChatRoomInterface;
 
 /**
  *

@@ -15,19 +15,21 @@ public class testmainClient
 {
    public static void main(String[] args)
    {
-      InetAddress ia;
-      try{
-         ia = InetAddress.getLocalHost();
-      }catch(SocketException | UnknownHostException e){
+     
+       try{
+        InetAddress ia = InetAddress.getLocalHost();
+        Client client = new Client(ia.toString(), 9999);
+        int i=8;
+        byte[] bi=(i+"").getBytes();
+      
+        client.send(bi);
+      
+      
+        String str = client.receive();
+        System.out.println("result is:"+str);
+
+      }catch(UnknownHostException e){
 			e.printStackTrace();
       }
-      Client client = new Client(ia.toString(), 1900);
-      int i=8;
-      byte[] bi=(i+"").getBytes();
-      
-      client.send(bi);
-      
-      
-      String conn = client.receive();
-   }
+    }
 }

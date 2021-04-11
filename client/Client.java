@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
 
 import data.Connection;
 import data.Packet;
-import data.PacketHandler;
+
 
 
 //Class to handle multi threaded instance of a UDP Client
@@ -32,6 +32,7 @@ public class Client implements Runnable
 
 	private DatagramSocket socket;
 	private Thread process, send, receive;
+   String s;
 
 	public Client(String addr, int port)
 	{
@@ -67,9 +68,9 @@ public class Client implements Runnable
 
 	//Receive data on the given server connection
 	//
-	public String receive(final PacketHandler handler)
+	public String receive()
 	{
-      String s;
+     
 		receive = new Thread("receive_thread"){
 			public void run()
 			{
@@ -79,6 +80,7 @@ public class Client implements Runnable
 					DatagramPacket dgpacket = new DatagramPacket(buffer, buffer.length);
 
 					try{
+                  
 						socket.receive(dgpacket);
                   s= new String(dgpacket.getData());
                   
@@ -86,17 +88,14 @@ public class Client implements Runnable
 					{
 						e.printStackTrace();
 					}
-               
-
-					handler.process(new Packet(dgpacket.getData(), dgpacket.getAddress(), dgpacket.getPort()));
 
 				}
 			}  
-          return s;
-
+          
 		};
-
 		receive.start();
+      return s;
+      
 	}
 
 	//close current connection

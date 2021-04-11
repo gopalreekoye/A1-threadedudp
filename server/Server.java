@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import data.Connection;
 import data.Packet;
-import data.PacketHandler;
 
 //Server class for handling a multi- threaded inistance of a UDP server
 //
@@ -20,6 +19,7 @@ public class Server implements Runnable
 	private int port;
 	private DatagramSocket socket;
 	private boolean running;
+   String s;
 
 	//threads to handle processes
 	private Thread send, receive, process;
@@ -100,10 +100,12 @@ public class Server implements Runnable
 
 	//receiving packet from clients
 	//
-	public void receive(final PacketHandler handler)
+	public String receive()
 	{
+     
 		receive = new Thread("receive_thread")
 		{
+         
 			public void run(){
 				while(running)
 				{
@@ -112,19 +114,20 @@ public class Server implements Runnable
 
 					try{
 						socket.receive(dgpacket);
+                  s= new String(dgpacket.getData());
 					}
 					catch(IOException e)
 					{
 						e.printStackTrace();
 					}
 
-					handler.process(new Packet(dgpacket.getData(), dgpacket.getAddress(), dgpacket.getPort()));
-
+					
 				}
 			}
 		};
 
 		receive.start();
+      return s;
 	}
 
 	//run method for runnable thread

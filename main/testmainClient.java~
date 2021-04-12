@@ -18,7 +18,7 @@ public class testmainClient
      
        try{
         InetAddress ia = InetAddress.getLocalHost();
-        Client client = new Client(ia.getHostAddress(), 9999);
+        Client client = new Client(ia.toString(), 9999);
         int i=8;
         byte[] bi=(i+"").getBytes();
       

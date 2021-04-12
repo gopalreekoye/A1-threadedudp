@@ -31,14 +31,14 @@ public class Client implements Runnable
 	private boolean running;
 
 	private DatagramSocket socket;
-	private Thread process, send, receive;
+	//private Thread process, send, receive;
 
 	public Client(String addr, int port)
 	{
 		try{
 			socket=new DatagramSocket();
 			connection = new Connection(socket, InetAddress.getByName(addr), port, 0);
-			this.init();
+		//	this.init();
 		}catch (SocketException | UnknownHostException e){
 			e.printStackTrace();
 		}
@@ -46,33 +46,33 @@ public class Client implements Runnable
 
 	//Client initialisation
 	//
-	private void init()
+	/*private void init()
 	{
 		process = new Thread(this, "server_process");
 		process.start();
 	}
-
+	*/
 	//send data 
 
 	public void send(final byte[] data)
 	{
-		send = new Thread("Sending Thread"){
-			public void run()
-			{
+		//send = new Thread("Sending Thread"){
+		//	public void run()
+		//	{
 				connection.send(data);
-			}
-		};
-		send.start();
+		//	}
+		//};
+		//send.start();
 	}
 
 	//Receive data on the given server connection
 	//
-	public String receive(final PacketHandler handler)
+	public String receive()
 	{
        String s = "";
-		receive = new Thread("receive_thread"){
-			public void run()
-			{
+		//receive = new Thread("receive_thread"){
+			//public void run()
+			//{
 				while(running)
 				{
 					byte[] buffer = new byte[1024];
@@ -86,17 +86,20 @@ public class Client implements Runnable
 					{
 						e.printStackTrace();
 					}
-               
+					
+					if(s.length() > 2){
+						break;
+					}
 
-					handler.process(new Packet(dgpacket.getData(), dgpacket.getAddress(), dgpacket.getPort()));
+					//handler.process(new Packet(dgpacket.getData(), dgpacket.getAddress(), dgpacket.getPort()));
 
 				}
-			}  
+			//}  
           
 
-		};
+		//};
 
-		receive.start();
+		//receive.start();
 		return s;
 	}
 

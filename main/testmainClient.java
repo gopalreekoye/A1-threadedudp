@@ -18,16 +18,15 @@ public class testmainClient
       InetAddress ia;
       try{
          ia = InetAddress.getLocalHost();
-      }catch(SocketException | UnknownHostException e){
+         Client client = new Client(ia.toString(), 1900);
+         int i=8;
+         byte[] bi=(i+"").getBytes();
+         client.send(bi);
+         System.out.println(client.receive());
+      
+      
+      }catch(UnknownHostException e){
 			e.printStackTrace();
       }
-      Client client = new Client(ia.toString(), 1900);
-      int i=8;
-      byte[] bi=(i+"").getBytes();
-      
-      client.send(bi);
-      
-      
-      String conn = client.receive();
    }
 }

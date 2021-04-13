@@ -5,12 +5,13 @@
  */
 package GUI;
 
+import javax.swing.JButton;
+
 /**
  *
  * @author Gopal
  */
 public class NewJPanel extends javax.swing.JPanel {
-
     /**
      * Creates new form NewJPanel
      */
@@ -40,6 +41,8 @@ public class NewJPanel extends javax.swing.JPanel {
 
         jButtonSend.setText("Send");
 
+        
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -63,9 +66,9 @@ public class NewJPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private static javax.swing.JButton jButtonSend;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
+    public javax.swing.JButton jButtonSend;
+    public javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JTextArea jTextArea1;
+    public javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

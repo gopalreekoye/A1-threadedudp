@@ -153,6 +153,25 @@ public class ChatRoomInterface extends javax.swing.JFrame {
     private void User1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_User1ActionPerformed
         NewJPanel jPanel2 = new NewJPanel();
         jTabbedPane3.addTab("User 1", jPanel2);
+        jPanel2.jButtonSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            }    
+        });
+        jPanel2.jTextArea1.setEditable(false);
+        Thread listener = new Thread(
+            new Runnable(){
+                @Override
+                public void run(){
+                    while(true){
+                        if(client.isNewMessage){
+                            jPanel2.jTextArea1.append(client.out);
+                            client.isNewMessage = false;
+                        }
+                    }
+                }
+            }
+        );
+        listener.start();
     }//GEN-LAST:event_User1ActionPerformed
 
     private void User2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_User2ActionPerformed

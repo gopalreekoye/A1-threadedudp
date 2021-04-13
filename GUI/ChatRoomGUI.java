@@ -141,6 +141,7 @@ public class ChatRoomGUI extends javax.swing.JFrame {
             ChatRoomInterface CRInter= new ChatRoomInterface(userName);
             System.out.println("Chatroom Interface created");
             CRInter.setVisible(true);
+            this.setVisible(false);
         }
         else
         {

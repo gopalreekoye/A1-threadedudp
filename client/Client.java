@@ -35,6 +35,7 @@ public class Client
 	private  User user;
 	private  String username;
 	public   String  out = "";
+	public 	 boolean isNewMessage = false;
 // 	//private Thread process, send, receive;
 
 	public Client(String username){
@@ -115,11 +116,13 @@ public class Client
 		else{
 			out = "Server: "+result.getText();
 		}
+		isNewMessage = true;
 	}
 
 	public  void handleMessage(Message result){
 		if(!result.getUser().getId().equals(user.getId())){
-			System.out.println(result.getUser().getUsername()+" : "+result.getText());
+			out = result.getUser().getUsername()+" : "+result.getText();
+			isNewMessage = true;
 		}
 	}
 }

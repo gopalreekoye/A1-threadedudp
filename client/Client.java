@@ -32,16 +32,16 @@ import server.Server;
 public class Client
 {
 // 	private Connection connection;
-	private static boolean running = true;
-	private static String serverAddress = "localhost";
-	private static int serverPort = 1434;
-	private static DatagramSocket socket;
-	private static String text = "";
-	private static String currentDest = "server";
-	private static User user;
+	private  boolean running = true;
+	private  String serverAddress = "localhost";
+	private  int serverPort = 1434;
+	private  DatagramSocket socket;
+	private  String text = "";
+	private  String currentDest = "server";
+	private  User user;
 // 	//private Thread process, send, receive;
 
-	public static void main(String [] args)
+	public  void main(String [] args)
 	{
 		try{
 			socket = new DatagramSocket();
@@ -99,7 +99,7 @@ public class Client
 
 
 
-	public static void listen(){
+	public  void listen(){
 		while(running){	
 			try {
 				byte[] buffer = new byte[1024];
@@ -121,7 +121,7 @@ public class Client
 		}
 	}
 
-	public static void send(Message message){
+	public  void send(Message message){
 		byte[] sendbuffer = message.getString().getBytes();
 		DatagramPacket sendPacket;
 		try {
@@ -135,7 +135,7 @@ public class Client
 		
 	}
 
-	public static User createUser() throws UnknownHostException{
+	public  User createUser() throws UnknownHostException{
 		Scanner input = new Scanner(System.in);
 		System.out.println("Enter username");
 		String username = input.nextLine();
@@ -144,7 +144,7 @@ public class Client
 		
 	}
 
-	public static void handleCommand(Message result){
+	public  void handleCommand(Message result){
 		if(result.getText().equals(":q")){
 			System.out.println("bye!");
 			running = false;
@@ -157,9 +157,9 @@ public class Client
 		}
 	}
 
-	public static void handleMessage(Message result){
+	public  void handleMessage(Message result){
 		if(!result.getUser().getId().trim().equals(user.getId().trim())){
-			System.out.println(result.getUser().getUsername()+" : "+result.getText()+"\r");
+			System.out.println(result.getUser().getUsername()+" : "+result.getText());
 		}
 	}
 }

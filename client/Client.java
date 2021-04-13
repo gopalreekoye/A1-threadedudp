@@ -19,12 +19,6 @@ import java.util.Scanner;
 
 import utils.*;
 
-import data.Connection;
-import data.Packet;
-import data.PacketHandler;
-import server.Server;
-
-
 //Class to handle multi threaded instance of a UDP Client
 //
 
@@ -39,57 +33,28 @@ public class Client
 	private  String text = "";
 	private  String currentDest = "server";
 	private  User user;
+	private  String username;
+	public   String  out = "";
 // 	//private Thread process, send, receive;
 
-	public  void main(String [] args)
+	public Client(String username){
+		this.username = username;
+		System.out.println("Client created");
+	}
+
+	public String getText(){
+		return text;
+	}
+	public void setText(String txt){
+		text = txt;
+	}
+
+	public  void run()
 	{
 		try{
 			socket = new DatagramSocket();
 			user = createUser();
-			send(new Message(user, true, "CU","server"));
-			Thread commandline = new Thread(
-				new Runnable(){
-					@Override
-					public void run(){
-						Scanner input = new Scanner(System.in);
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-		
-						while(!text.equals(":q"))
-						{
-							System.out.print("You: ");
-							text = input.nextLine();
-							if(text.startsWith(":")){
-								if(text.startsWith(":d")){
-									String selection = text.substring(2);
-									currentDest = selection.trim();
-									System.out.println("Destination changed to " + currentDest);
-								}
-								else if(text.startsWith(":l")){
-									try {
-										send(new Message(user, true, text,"server"));
-										Thread.sleep(1000);
-									} catch (InterruptedException e) {
-										e.printStackTrace();
-									}
-								}
-								else{
-									send(new Message(user, true, text,"server"));
-								}
-								
-							}else{
-								send(new Message(user, false, text,currentDest));
-							}
-						}
-						send(new Message(user, true, ":q","server"));
-						
-					}
-				}
-			);
-			commandline.start();
+			send(new Message(user, true, "CU","server"));	
 			listen();
 		}catch (SocketException | UnknownHostException e){
 			e.printStackTrace();
@@ -135,13 +100,8 @@ public class Client
 		
 	}
 
-	public  User createUser() throws UnknownHostException{
-		Scanner input = new Scanner(System.in);
-		System.out.println("Enter username");
-		String username = input.nextLine();
-
+	public  User createUser() throws UnknownHostException{	
 		return new User(socket.getLocalPort(),InetAddress.getLocalHost().getHostAddress(), username);
-		
 	}
 
 	public  void handleCommand(Message result){
@@ -153,12 +113,12 @@ public class Client
 			System.out.println(result.getText().substring(3).trim());
 		}
 		else{
-			System.out.println("Server: "+result.getText());
+			out = "Server: "+result.getText();
 		}
 	}
 
 	public  void handleMessage(Message result){
-		if(!result.getUser().getId().trim().equals(user.getId().trim())){
+		if(!result.getUser().getId().equals(user.getId())){
 			System.out.println(result.getUser().getUsername()+" : "+result.getText());
 		}
 	}

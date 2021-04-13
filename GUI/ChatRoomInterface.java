@@ -6,18 +6,28 @@
 package GUI;
 import javax.swing.JTabbedPane;
 import javax.swing.*;
+import client.Client;
 /**
  *
  * @author Gopal
  */
 public class ChatRoomInterface extends javax.swing.JFrame {
 
+    static Client client; 
+    String username;
     /**
      * Creates new form ChatRoomInterface
      */
-    public ChatRoomInterface() {
+    public ChatRoomInterface(String username) {
+        this.username = username;
+        client = new Client(username);
         initComponents();
     }
+
+    public ChatRoomInterface(){
+        initComponents();
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -125,8 +135,19 @@ public class ChatRoomInterface extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jTabbedPane3)
         );
+        System.out.println("Main end");
 
         pack();
+        Thread listener = new Thread(
+            new Runnable(){
+                @Override
+                public void run(){
+                    client.run();
+                }
+            }
+        );
+        listener.start();
+        
     }// </editor-fold>//GEN-END:initComponents
 
     private void User1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_User1ActionPerformed
@@ -174,14 +195,18 @@ public class ChatRoomInterface extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ChatRoomInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                
                 new ChatRoomInterface().setVisible(true);
             }
         });
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -136,10 +136,10 @@ public class ChatRoomGUI extends javax.swing.JFrame {
         String userName = UserName.getText();
         String passWord = PassWord.getText();
         
-        if((userName.compareTo("king")== 0) && (passWord.compareTo("123")==0))  //Compares username&password for identification
+        if((userName.compareTo("username")== 0) && (passWord.compareTo("password")==0))  //Compares username&password for identification
         {
-            ChatRoomInterface CRInter= new ChatRoomInterface();
-        
+            ChatRoomInterface CRInter= new ChatRoomInterface(userName);
+            System.out.println("Chatroom Interface created");
             CRInter.setVisible(true);
         }
         else

@@ -53,20 +53,11 @@ public class Server
 			
 				Message request = new Message(new String(dgpacket.getData()));
 				if(request.getCommand()){
-					if(request.getText().equals("CU")){
-						CLIENTS.add(request.getUser());
-						send(new Message(request.getUser(), true,"registered" , request.getUser().getId()));
-					}
-					else if(request.getText().equals(":q")){
-						CLIENTS.remove(request.getUser());
-						send(new Message(request.getUser(), true,":q" , request.getUser().getId()));
-						
-					}
-					else if(request.getText().equals(":l")){
-						send(new Message(request.getUser(), true, getAvailableUsers(), request.getUser().getId()));
-					}
+					System.out.println("handlin command");
+					handleCommand(request);
 				}
 				else{
+					System.out.println("distributing message");
 					distributeMessage(request);
 				}
 				
@@ -100,7 +91,8 @@ public class Server
 
 	public void distributeMessage(Message message){
 		String destination = message.getDestination();
-		if(destination.equals("server")){
+		System.out.println("destination: "+destination);
+		if(!destination.equals("server")){
 			System.out.println("non server branch");
 			User destUser = searchClientById(destination);
 			if(destUser != null){
@@ -111,6 +103,21 @@ public class Server
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	public void handleCommand(Message request) throws UnknownHostException{
+		if(request.getText().equals("CU")){
+			CLIENTS.add(request.getUser());
+			send(new Message(request.getUser(), true,"registered" , request.getUser().getId()));
+		}
+		else if(request.getText().equals(":q")){
+			CLIENTS.remove(request.getUser());
+			send(new Message(request.getUser(), true,":q" , request.getUser().getId()));
+			
+		}
+		else if(request.getText().equals(":l")){
+			send(new Message(request.getUser(), true, getAvailableUsers(), request.getUser().getId()));
 		}
 	}
 
@@ -126,8 +133,10 @@ public class Server
 	public String getAvailableUsers(){
 		String list = "";
 		for(User client : CLIENTS){
-			list += ":l & "+ client.getId()+":"+client.getUsername();
+			list += "& "+ client.getId()+":"+client.getUsername();
+			list = ":l "+list;
 		}
 		return list;
 	}
 }
+ 

@@ -35,13 +35,13 @@ public class Message {
     public void parseString(String message){
         String [] data = message.split("~&~");
         try {
-            user = new User(Integer.parseInt(data[0]),data[1],data[2]);
+            user = new User(Integer.parseInt(data[0]),data[1].trim(),data[2].trim());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
         command = Boolean.parseBoolean(data[3]);
-        text = data[4];
-        destination = data[5];
+        text = data[4].trim();
+        destination = data[5].trim();
     }
 
     public User getUser(){

@@ -38,13 +38,14 @@ public class Client
 	private static DatagramSocket socket;
 	private static String text = "";
 	private static String currentDest = "server";
+	private static User user;
 // 	//private Thread process, send, receive;
 
 	public static void main(String [] args)
 	{
 		try{
 			socket = new DatagramSocket();
-			User user = createUser();
+			user = createUser();
 			send(new Message(user, true, "CU","server"));
 			Thread commandline = new Thread(
 				new Runnable(){
@@ -65,7 +66,7 @@ public class Client
 								if(text.startsWith(":d")){
 									String selection = text.substring(2);
 									currentDest = selection.trim();
-									System.out.println("Destination changed to" + currentDest);
+									System.out.println("Destination changed to " + currentDest);
 								}
 								else if(text.startsWith(":l")){
 									try {
@@ -79,8 +80,9 @@ public class Client
 									send(new Message(user, true, text,"server"));
 								}
 								
+							}else{
+								send(new Message(user, false, text,currentDest));
 							}
-							send(new Message(user, false, text,currentDest));
 						}
 						send(new Message(user, true, ":q","server"));
 						
@@ -95,78 +97,7 @@ public class Client
 		
 	}
 
-// 	//Client initialisation
-// 	//
-// 	/*private void init()
-// 	{
-// 		process = new Thread(this, "server_process");
-// 		process.start();
-// 	}
-// 	*/
-// 	//send data 
 
-// 	public void send(final byte[] data)
-// 	{
-// 		//send = new Thread("Sending Thread"){
-// 		//	public void run()
-// 		//	{
-// 				connection.send(data);
-// 		//	}
-// 		//};
-// 		//send.start();
-// 	}
-
-// 	//Receive data on the given server connection
-// 	//
-// 	public String receive()
-// 	{
-//        String s = "";
-// 		//receive = new Thread("receive_thread"){
-// 			//public void run()
-// 			//{
-// 				while(running)
-// 				{
-// 					byte[] buffer = new byte[1024];
-// 					DatagramPacket dgpacket = new DatagramPacket(buffer, buffer.length);
-
-// 					try{
-// 						socket.receive(dgpacket);
-//                   	s = new String(dgpacket.getData());
-                  
-// 					}catch(IOException e)
-// 					{
-// 						e.printStackTrace();
-// 					}
-					
-// 					if(s.length() > 2){
-// 						break;
-// 					}
-
-// 					//handler.process(new Packet(dgpacket.getData(), dgpacket.getAddress(), dgpacket.getPort()));
-
-// 				}
-// 			//}  
-          
-
-// 		//};
-
-// 		//receive.start();
-// 		return s;
-// 	}
-
-// 	//close current connection
-// 	//
-// 	public void close()
-// 	{
-// 		connection.close();
-// 		running = false;
-// 	}
-
-// 	@Override
-// 	public void run()
-// 	{
-// 		running = true;
-// 	}
 
 	public static void listen(){
 		while(running){	
@@ -176,21 +107,9 @@ public class Client
 				socket.receive(dgpacket);
 				Message result = new Message(new String(dgpacket.getData()));
 				if(result.getCommand()){
-					if(result.getText().equals("CU")){
-						//
-					}
-					else if(result.getText().equals(":q")){
-						System.out.println("bye!");
-						break;
-					}
-					else if(result.getText().startsWith(":l")){
-						System.out.println(result.getText().substring(3).trim());
-					}
-					else{
-						System.out.println("Server: "+result.getText());
-					}
+					handleCommand(result);
 				}else{
-					
+					handleMessage(result);	
 				}
 				
 				
@@ -223,5 +142,24 @@ public class Client
 
 		return new User(socket.getLocalPort(),InetAddress.getLocalHost().getHostAddress(), username);
 		
+	}
+
+	public static void handleCommand(Message result){
+		if(result.getText().equals(":q")){
+			System.out.println("bye!");
+			running = false;
+		}
+		else if(result.getText().startsWith(":l")){
+			System.out.println(result.getText().substring(3).trim());
+		}
+		else{
+			System.out.println("Server: "+result.getText());
+		}
+	}
+
+	public static void handleMessage(Message result){
+		if(!result.getUser().getId().trim().equals(user.getId().trim())){
+			System.out.println(result.getUser().getUsername()+" : "+result.getText()+"\r");
+		}
 	}
 }

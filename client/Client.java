@@ -135,7 +135,15 @@ public class Client
 		}
 		else if(result.getText().startsWith(":l")){
 			System.out.println("got connected users");
-			String nameId = result.getText().substring(2);
+			
+			String nameId = result.getText();
+			if(nameId.length() > 3){
+				nameId = nameId.substring(3);
+			}
+			else{
+				nameId = nameId.substring(2);
+			}
+
 			String [] content = nameId.split("#");
 			onlineUsers = new String [content.length];
 			for(int i = 0; i < content.length; i++){

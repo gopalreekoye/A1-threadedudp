@@ -132,12 +132,15 @@ public class Server
 	public String getAvailableUsers(User user){
 		String list = "";
 		for(User client : CLIENTS){
-			if(!client.equals(user)){
-				list += " & "+ client.getId()+":"+client.getUsername();
-				list = ":l "+list;
+			System.out.println("client :"+client.getId());
+			System.out.println("user :"+user.getId());
+			if(!client.getId().equals(user.getId())){
+				list += "#"+ client.getId().strip()+":"+client.getUsername().strip();
+				
 			}		
 		}
-		return list;
+		list = ":l"+list;
+		return list.strip();
 	}
 }
  

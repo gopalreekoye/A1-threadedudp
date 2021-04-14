@@ -15,6 +15,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import utils.*;
 
@@ -133,12 +134,14 @@ public class Client
 			running = false;
 		}
 		else if(result.getText().startsWith(":l")){
-			System.out.println(getText());
-			String [] content = getText().split("&");
-			onlineUsers = new String [content.length-1];
-			for(int i = 1; i < content.length; i++){
+			System.out.println("got connected users");
+			String nameId = result.getText().substring(2);
+			String [] content = nameId.split("#");
+			onlineUsers = new String [content.length];
+			for(int i = 0; i < content.length; i++){
 				onlineUsers[i] = content[i];
 			}
+			System.out.println(Arrays.toString(onlineUsers));
 		}
 		else{
 			System.out.println("Server: "+result.getText());
@@ -147,9 +150,14 @@ public class Client
 
 	public  void handleMessage(Message result){
 		if(!result.getUser().getId().equals(user.getId())){
-			out[0] = result.getUser().getId()+" : "+ result.getUser().getUsername(); 
+			out[0] = result.getUser().getId()+":"+ result.getUser().getUsername(); 
 			out[1] = result.getUser().getUsername()+" : "+result.getText();
 			isNewMessage = true;
+			System.out.println("id : "+ out[0]);
+		}
+		else
+		{
+
 		}
 	}
 

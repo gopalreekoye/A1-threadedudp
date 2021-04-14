@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.lang.String;
-import GUI.ChatRoomInterface;
 
 /**
  *
@@ -138,7 +137,7 @@ public class ChatRoomGUI extends javax.swing.JFrame {
         
         if((userName.compareTo("username")== 0) && (passWord.compareTo("password")==0))  //Compares username&password for identification
         {
-            ChatRoomInterface CRInter= new ChatRoomInterface(userName);
+            Gui CRInter= new Gui(userName);
             System.out.println("Chatroom Interface created");
             CRInter.setVisible(true);
             this.setVisible(false);

@@ -15,7 +15,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
 import utils.*;
 
@@ -34,8 +33,9 @@ public class Client
 	private  String currentDest = "server";
 	private  User user;
 	private  String username;
-	public   String  out = "";
+	public   String[] out = new String[2];
 	public 	 boolean isNewMessage = false;
+	public	 String [] onlineUsers;
 // 	//private Thread process, send, receive;
 
 	public Client(String username){
@@ -55,8 +55,20 @@ public class Client
 		try{
 			socket = new DatagramSocket();
 			user = createUser();
-			send(new Message(user, true, "CU","server"));	
-			listen();
+				
+			
+			Thread listener = new Thread(
+            new Runnable(){
+                @Override
+                public void run(){
+					listen();
+                }
+            });
+			listener.start();
+			send(new Message(user, true, "CU","server"));
+			
+			
+
 		}catch (SocketException | UnknownHostException e){
 			e.printStackTrace();
 		}
@@ -87,6 +99,11 @@ public class Client
 		}
 	}
 
+	public void getConnectedUsers(){
+		System.out.println("Getting connected users");
+		send(new Message(user, true, ":l","server"));
+	}
+
 	public  void send(Message message){
 		byte[] sendbuffer = message.getString().getBytes();
 		DatagramPacket sendPacket;
@@ -101,28 +118,47 @@ public class Client
 		
 	}
 
+	public void send(String message){
+		send(new Message(user,false,message,currentDest));
+	}
+
 	public  User createUser() throws UnknownHostException{	
 		return new User(socket.getLocalPort(),InetAddress.getLocalHost().getHostAddress(), username);
 	}
 
 	public  void handleCommand(Message result){
+		System.out.println("Handling command");
 		if(result.getText().equals(":q")){
 			System.out.println("bye!");
 			running = false;
 		}
 		else if(result.getText().startsWith(":l")){
-			System.out.println(result.getText().substring(3).trim());
+			System.out.println(getText());
+			String [] content = getText().split("&");
+			onlineUsers = new String [content.length-1];
+			for(int i = 1; i < content.length; i++){
+				onlineUsers[i] = content[i];
+			}
 		}
 		else{
-			out = "Server: "+result.getText();
+			System.out.println("Server: "+result.getText());
 		}
-		isNewMessage = true;
 	}
 
 	public  void handleMessage(Message result){
 		if(!result.getUser().getId().equals(user.getId())){
-			out = result.getUser().getUsername()+" : "+result.getText();
+			out[0] = result.getUser().getId()+" : "+ result.getUser().getUsername(); 
+			out[1] = result.getUser().getUsername()+" : "+result.getText();
 			isNewMessage = true;
 		}
+	}
+
+	public void setDestination(String dest){
+		currentDest = dest;
+	}
+
+	public String decoupleAddress(String str){
+		String [] id = str.split(":");
+		return id[0].trim();
 	}
 }

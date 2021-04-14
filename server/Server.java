@@ -113,11 +113,10 @@ public class Server
 		}
 		else if(request.getText().equals(":q")){
 			CLIENTS.remove(request.getUser());
-			send(new Message(request.getUser(), true,":q" , request.getUser().getId()));
 			
 		}
 		else if(request.getText().equals(":l")){
-			send(new Message(request.getUser(), true, getAvailableUsers(), request.getUser().getId()));
+			send(new Message(request.getUser(), true, getAvailableUsers(request.getUser()), request.getUser().getId()));
 		}
 	}
 
@@ -130,11 +129,13 @@ public class Server
 		return null;
 	}
 
-	public String getAvailableUsers(){
+	public String getAvailableUsers(User user){
 		String list = "";
 		for(User client : CLIENTS){
-			list += "& "+ client.getId()+":"+client.getUsername();
-			list = ":l "+list;
+			if(!client.equals(user)){
+				list += " & "+ client.getId()+":"+client.getUsername();
+				list = ":l "+list;
+			}		
 		}
 		return list;
 	}
